@@ -1,43 +1,54 @@
 package com.example.atividade01dm.viewmodel
 
+import android.app.Application
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.atividade01dm.api.ApiClient
-import com.example.atividade01dm.api.ErrorResponse
+import com.example.atividade01dm.api.ApiRepository
+import com.example.atividade01dm.api.ApiState
 import com.example.atividade01dm.api.request.LoginRequestBody
-import com.google.gson.Gson
+import com.example.atividade01dm.api.response.LoginResponseBody
 import kotlinx.coroutines.launch
-import java.io.IOException
 
-class AuthViewModel: ViewModel() {
-    val error = mutableStateOf("")
+/*
+Classe responsável por representar o modelo de visualização.
+Ela contém os dados necessários para construir a interface do usuário.
+Lembre-se que o ViewModel sobrevive as alterações de configuração, como a rotação da tela.
+Desta forma o estado da interface não é perdido em caso de alterações de configuração.
+É no ViewModel que vamos acessar os dados da API e repassá-los para a interface.
+ */
+class AuthViewModel(
+    application: Application
+) : AndroidViewModel(application) {
+    private val apiRepository = ApiRepository()
+    private val _loginResponseBody = mutableStateOf<ApiState<LoginResponseBody>>(ApiState.Created())
+    val loginResponseBody: State<ApiState<LoginResponseBody>> = _loginResponseBody
 
-    fun login() {
+    fun login(
+        email: String,
+        senha: String
+    ) {
+        if (email.isBlank()) {
+            _loginResponseBody.value = ApiState.Error("Informe o usuário")
+            return
+        }
+
+        if (senha.isBlank()) {
+            _loginResponseBody.value = ApiState.Error("Informe a senha")
+            return
+        }
+
         val requestBody = LoginRequestBody()
-        requestBody.email = "alx.delira@gmail.com1"
-        requestBody.senha = "12345678"
+        requestBody.email = email
+        requestBody.senha = senha
+
+        _loginResponseBody.value = ApiState.Loading()
 
         viewModelScope.launch {
-            try {
-                val response = ApiClient.apiEndpoint.login(requestBody)
-
-                if (response.isSuccessful) {
-                    response.body()?.let { responseBody ->
-                        println(responseBody.token)
-                        println(responseBody.usuario.nome)
-                    }
-                } else {
-                    response.errorBody()?.let { responseBody ->
-                        val errorResponse = Gson().fromJson(responseBody.source().readUtf8(), ErrorResponse::class.java)
-                        error.value = errorResponse.message
-                        //println(error.message)
-                    }
-                }
-            } catch (e: IOException) {
-                println("Falha na conexão com o servidor")
-            } catch (e: Exception) {
-                println("Não foi possível concluir sua solicitação")
+            _loginResponseBody.value = apiRepository.login(requestBody)
+            if (_loginResponseBody.value is ApiState.Success) {
+                //Salva dados do usuário
             }
         }
     }
