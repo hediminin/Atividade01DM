@@ -9,6 +9,8 @@ import com.example.atividade01dm.api.ApiRepository
 import com.example.atividade01dm.api.ApiState
 import com.example.atividade01dm.api.request.LoginRequestBody
 import com.example.atividade01dm.api.response.LoginResponseBody
+import com.example.atividade01dm.datastore.AppDataStore
+import com.example.atividade01dm.datastore.AppDataStoreKeys
 import kotlinx.coroutines.launch
 
 /*
@@ -19,7 +21,7 @@ Desta forma o estado da interface não é perdido em caso de alterações de con
 É no ViewModel que vamos acessar os dados da API e repassá-los para a interface.
  */
 class AuthViewModel(
-    application: Application
+    private val application: Application
 ) : AndroidViewModel(application) {
     private val apiRepository = ApiRepository()
     private val _loginResponseBody = mutableStateOf<ApiState<LoginResponseBody>>(ApiState.Created())
@@ -48,7 +50,15 @@ class AuthViewModel(
         viewModelScope.launch {
             _loginResponseBody.value = apiRepository.login(requestBody)
             if (_loginResponseBody.value is ApiState.Success) {
-                //Salva dados do usuário
+
+                /*
+                Salva dados do usuário
+                 */
+                _loginResponseBody.value.data?.let { data ->
+                    val appDataStore = AppDataStore(application.applicationContext)
+                    appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, true)
+                    appDataStore.putString(AppDataStoreKeys.TOKEN, data.token)
+                }
             }
         }
     }
