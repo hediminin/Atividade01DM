@@ -12,6 +12,7 @@ import com.example.atividade01dm.api.response.LoginResponseBody
 import com.example.atividade01dm.datastore.AppDataStore
 import com.example.atividade01dm.datastore.AppDataStoreKeys
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /*
 Classe responsável por representar o modelo de visualização.
@@ -55,9 +56,11 @@ class AuthViewModel(
                 Salva dados do usuário
                  */
                 _loginResponseBody.value.data?.let { data ->
-                    val appDataStore = AppDataStore(application.applicationContext)
-                    appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, true)
-                    appDataStore.putString(AppDataStoreKeys.TOKEN, data.token)
+                    runBlocking {
+                        val appDataStore = AppDataStore(application.applicationContext)
+                        appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, true)
+                        appDataStore.putString(AppDataStoreKeys.TOKEN, data.token)
+                    }
                 }
             }
         }

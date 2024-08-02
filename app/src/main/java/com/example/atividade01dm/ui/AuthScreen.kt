@@ -31,17 +31,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.atividade01dm.R
 import com.example.atividade01dm.api.ApiState
 import com.example.atividade01dm.viewmodel.AuthViewModel
 
 @Composable
-fun MainScreen() {
+fun AuthScreen(
+    navController: NavController
+) {
     val authViewModel = viewModel<AuthViewModel>()
     val loginState by authViewModel.loginResponseBody
 
-    var usuario by remember { mutableStateOf("") }
-    var senha by remember { mutableStateOf("") }
+    var usuario by remember { mutableStateOf("alx.delira@gmail.com") }
+    var senha by remember { mutableStateOf("12345678") }
     var passwordVisibility by remember { mutableStateOf(false) }
 
     Column(
@@ -64,7 +67,7 @@ fun MainScreen() {
             is ApiState.Created -> {}
             is ApiState.Loading -> {}
             is ApiState.Success -> {
-                //redireciona
+                navController.navigate("usuarios")
             }
             is ApiState.Error -> {
                 loginState.message?.let { message ->
@@ -126,5 +129,9 @@ fun MainScreen() {
                     .padding(10.dp)
             )
         }
+    }
+
+    if (loginState is ApiState.Loading) {
+        LoadScreen()
     }
 }
