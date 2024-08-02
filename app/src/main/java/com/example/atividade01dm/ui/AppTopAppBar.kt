@@ -31,7 +31,9 @@ fun AppTopAppBar(
                 Unit
             } else {
                 IconButton(
-                    onClick = { navController.navigateUp() }
+                    onClick = {
+                        navController.navigateUp()
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,

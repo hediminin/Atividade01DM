@@ -1,8 +1,6 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    //kotlin("kapt")
-    //id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -50,9 +48,6 @@ android {
         }
     }
     buildToolsVersion = "34.0.0"
-    //kapt {
-    //   correctErrorTypes = true
-    //}
 }
 
 dependencies {
@@ -77,9 +72,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
-    //implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    //implementation("com.google.dagger:hilt-android:2.51.1")
-    //kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
     testImplementation("junit:junit:4.13.2")
 
