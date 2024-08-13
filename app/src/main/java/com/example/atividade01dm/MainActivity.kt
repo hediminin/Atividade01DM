@@ -11,13 +11,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.atividade01dm.ui.AuthScreen
-import com.example.atividade01dm.ui.UsuarioScreen
+import com.example.atividade01dm.ui.DashboardScreen
+import com.example.atividade01dm.ui.UsuarioEditaScreen
 import com.example.atividade01dm.ui.UsuariosScreen
 import com.example.atividade01dm.ui.theme.Atividade01DMTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             val navController = rememberNavController()
 
@@ -29,16 +32,22 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "inicio"
+                        startDestination = "auth"
                     ) {
-                        composable("inicio") {
+                        composable("auth") {
                             AuthScreen(navController)
                         }
                         composable("usuarios") {
                             UsuariosScreen(navController)
                         }
-                        composable("usuario") {
-                            UsuarioScreen(navController)
+                        composable("usuario/{id}") { navBackStackEntry ->
+                            val aId = navBackStackEntry.arguments?.getString("id")
+                            aId?.let { id ->
+                                UsuarioEditaScreen(navController, id)
+                            }
+                        }
+                        composable("dashboard") {
+                            DashboardScreen(navController)
                         }
                     }
                 }

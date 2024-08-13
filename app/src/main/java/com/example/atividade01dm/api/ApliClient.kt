@@ -12,7 +12,7 @@ Precisamos construir o Objeto Retrofit informando a URL da API e o conversor JSO
 que será utilizado, neste caso a biblioteca GSON.
  */
 object RetrofitClient {
-    private const val BASE_URL = "https://api-estudos.vercel.app"
+    const val BASE_URL = "https://alexandre-3030.code.fslab.dev"
 
     private val authInterceptor: AuthInterceptor by lazy {
         val appDataStore = AppDataStore(MainApplication.instance.applicationContext)

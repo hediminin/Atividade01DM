@@ -11,6 +11,7 @@ import com.example.atividade01dm.api.request.LoginRequestBody
 import com.example.atividade01dm.api.response.LoginResponseBody
 import com.example.atividade01dm.datastore.AppDataStore
 import com.example.atividade01dm.datastore.AppDataStoreKeys
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -25,12 +26,23 @@ class AuthViewModel(
     private val application: Application
 ) : AndroidViewModel(application) {
     private val apiRepository = ApiRepository()
+    private val appDataStore = AppDataStore(application.applicationContext)
+    private val _autenticado = mutableStateOf(false)
+    val autenticado: State<Boolean> = _autenticado
+
     private val _loginResponseBody = mutableStateOf<ApiState<LoginResponseBody>>(ApiState.Created())
     val loginResponseBody: State<ApiState<LoginResponseBody>> = _loginResponseBody
 
+    init {
+        viewModelScope.launch {
+            _autenticado.value = appDataStore.getBoolean(AppDataStoreKeys.AUTENTICADO).first()
+        }
+    }
+
     fun login(
         email: String,
-        senha: String
+        senha: String,
+        onComplete: () -> Unit
     ) {
         if (email.isBlank()) {
             _loginResponseBody.value = ApiState.Error("Informe o usuário")
@@ -57,12 +69,29 @@ class AuthViewModel(
                  */
                 _loginResponseBody.value.data?.let { data ->
                     runBlocking {
-                        val appDataStore = AppDataStore(application.applicationContext)
                         appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, true)
                         appDataStore.putString(AppDataStoreKeys.TOKEN, data.token)
+                        appDataStore.putString(AppDataStoreKeys.NOME, data.usuario.nome)
+                        appDataStore.putString(AppDataStoreKeys.EMAIL, data.usuario.email)
+
+                        data.usuario.foto?.let { foto ->
+                            appDataStore.putString(AppDataStoreKeys.FOTO, foto)
+                        }
                     }
+                    _autenticado.value = true
+                    onComplete()
                 }
             }
         }
+    }
+
+    fun logout(
+        onComplete: () -> Unit
+    ) {
+        runBlocking {
+            appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, false)
+        }
+        _autenticado.value = true
+        onComplete()
     }
 }

@@ -42,6 +42,7 @@ fun AuthScreen(
 ) {
     val authViewModel = viewModel<AuthViewModel>()
     val loginState by authViewModel.loginResponseBody
+    val autenticado by authViewModel.autenticado
 
     var usuario by remember { mutableStateOf("alx.delira@gmail.com") }
     var senha by remember { mutableStateOf("12345678") }
@@ -56,7 +57,7 @@ fun AuthScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ifro_campus_vertical),
+            painter = painterResource(id = R.drawable.ic_person),
             contentDescription = null,
             modifier = Modifier
                 .padding(bottom = 24.dp)
@@ -66,9 +67,7 @@ fun AuthScreen(
         when(loginState) {
             is ApiState.Created -> {}
             is ApiState.Loading -> {}
-            is ApiState.Success -> {
-                navController.navigate("usuarios")
-            }
+            is ApiState.Success -> {}
             is ApiState.Error -> {
                 loginState.message?.let { message ->
                     Text(
@@ -116,7 +115,10 @@ fun AuthScreen(
             onClick = {
                 authViewModel.login(
                     usuario,
-                    senha
+                    senha,
+                    onComplete = {
+                        navController.navigate("dashboard")
+                    }
                 )
             },
             modifier = Modifier
@@ -133,5 +135,9 @@ fun AuthScreen(
 
     if (loginState is ApiState.Loading) {
         LoadScreen()
+    }
+
+    if (autenticado) {
+        navController.navigate("dashboard")
     }
 }

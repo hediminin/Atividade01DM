@@ -1,7 +1,11 @@
 package com.example.atividade01dm.api
 
 import com.example.atividade01dm.api.request.LoginRequestBody
+import com.example.atividade01dm.api.request.UsuarioEditaRequestBody
+import com.example.atividade01dm.api.response.DashboardResponseBody
 import com.example.atividade01dm.api.response.LoginResponseBody
+import com.example.atividade01dm.api.response.UsuarioEditaResponseBody
+import com.example.atividade01dm.api.response.UsuarioResponseBody
 import com.example.atividade01dm.api.response.UsuariosResponseBody
 
 /*
@@ -15,6 +19,18 @@ class ApiRepository: BaseRepository() {
     }
 
     suspend fun getUsuarios() : ApiState<UsuariosResponseBody> {
-        return makeApiCall { ApiClient.apiEndpoint.usuarios() }
+        return makeApiCall { ApiClient.apiEndpoint.getUsuarios() }
+    }
+
+    suspend fun getUsuario(id: String) : ApiState<UsuarioResponseBody> {
+        return makeApiCall { ApiClient.apiEndpoint.getUsuario(id) }
+    }
+
+    suspend fun usuarioEdita(id: String, requestBody: UsuarioEditaRequestBody) : ApiState<UsuarioEditaResponseBody> {
+        return makeApiCall { ApiClient.apiEndpoint.usuarioEdita(id, requestBody) }
+    }
+
+    suspend fun getDashboard() : ApiState<DashboardResponseBody> {
+        return makeApiCall { ApiClient.apiEndpoint.getDashboard() }
     }
 }
