@@ -88,7 +88,7 @@ fun DashboardScreen(
                         .fillMaxWidth()
                 ) {
                     FotoPerfil(
-                        foto = dashBoardViewModel.foto,
+                        foto = dashBoardViewModel.perfilLocal.foto,
                         50.dp
                     )
 
@@ -96,9 +96,9 @@ fun DashboardScreen(
                         modifier = Modifier
                             .padding(start = 10.dp)
                     ) {
-                        Text(dashBoardViewModel.nome)
+                        Text(dashBoardViewModel.perfilLocal.nome)
                         Text(
-                            dashBoardViewModel.email,
+                            dashBoardViewModel.perfilLocal.email,
                             fontSize = 14.sp,
                             color = Color.Gray
                         )

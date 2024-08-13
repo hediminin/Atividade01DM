@@ -12,6 +12,7 @@ import com.example.atividade01dm.api.ApiState
 import com.example.atividade01dm.api.response.DashboardResponseBody
 import com.example.atividade01dm.datastore.AppDataStore
 import com.example.atividade01dm.datastore.AppDataStoreKeys
+import com.example.atividade01dm.datastore.PerfilLocal
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -24,12 +25,10 @@ class DashBoardViewModel(
     private val _dashboardResponseBody = mutableStateOf<ApiState<DashboardResponseBody>>(ApiState.Created())
     val dashboardResponseBody: State<ApiState<DashboardResponseBody>> = _dashboardResponseBody
 
-    var nome by mutableStateOf("")
-    var email by mutableStateOf("")
-    var foto by mutableStateOf("")
+    var perfilLocal by mutableStateOf(PerfilLocal())
 
     init {
-        carregaPerfilLocal()
+        loadLocalProfile()
     }
 
     fun getDashboard() {
@@ -40,11 +39,11 @@ class DashBoardViewModel(
     }
 
 
-    fun carregaPerfilLocal() {
+    private fun loadLocalProfile() {
         viewModelScope.launch {
-            nome = appDataStore.getString(AppDataStoreKeys.NOME).first()
-            email = appDataStore.getString(AppDataStoreKeys.EMAIL).first()
-            foto = appDataStore.getString(AppDataStoreKeys.FOTO).first()
+            perfilLocal.nome = appDataStore.getString(AppDataStoreKeys.NOME).first()
+            perfilLocal.email = appDataStore.getString(AppDataStoreKeys.EMAIL).first()
+            perfilLocal.foto = appDataStore.getString(AppDataStoreKeys.FOTO).first()
         }
     }
 }
