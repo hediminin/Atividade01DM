@@ -42,7 +42,7 @@ fun AuthScreen(
 ) {
     val authViewModel = viewModel<AuthViewModel>()
     val loginState by authViewModel.loginResponseBody
-    val autenticado by authViewModel.autenticado
+    val perfilLocal by authViewModel.perfilLocal
 
     var usuario by remember { mutableStateOf("alx.delira@gmail.com") }
     var senha by remember { mutableStateOf("12345678") }
@@ -137,7 +137,7 @@ fun AuthScreen(
         LoadScreen()
     }
 
-    if (autenticado) {
+    if (perfilLocal.autenticado) {
         navController.navigate("dashboard")
     }
 }

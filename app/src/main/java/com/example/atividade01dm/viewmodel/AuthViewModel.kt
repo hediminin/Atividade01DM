@@ -3,15 +3,11 @@ package com.example.atividade01dm.viewmodel
 import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.atividade01dm.api.ApiRepository
 import com.example.atividade01dm.api.ApiState
 import com.example.atividade01dm.api.request.LoginRequestBody
 import com.example.atividade01dm.api.response.LoginResponseBody
-import com.example.atividade01dm.datastore.AppDataStore
 import com.example.atividade01dm.datastore.AppDataStoreKeys
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -23,21 +19,10 @@ Desta forma o estado da interface não é perdido em caso de alterações de con
 É no ViewModel que vamos acessar os dados da API e repassá-los para a interface.
  */
 class AuthViewModel(
-    private val application: Application
-) : AndroidViewModel(application) {
-    private val apiRepository = ApiRepository()
-    private val appDataStore = AppDataStore(application.applicationContext)
-    private val _autenticado = mutableStateOf(false)
-    val autenticado: State<Boolean> = _autenticado
-
+    application: Application
+) : MainViewModel(application) {
     private val _loginResponseBody = mutableStateOf<ApiState<LoginResponseBody>>(ApiState.Created())
     val loginResponseBody: State<ApiState<LoginResponseBody>> = _loginResponseBody
-
-    init {
-        viewModelScope.launch {
-            _autenticado.value = appDataStore.getBoolean(AppDataStoreKeys.AUTENTICADO).first()
-        }
-    }
 
     fun login(
         email: String,
@@ -78,7 +63,7 @@ class AuthViewModel(
                             appDataStore.putString(AppDataStoreKeys.FOTO, foto)
                         }
                     }
-                    _autenticado.value = true
+                    _perfilLocal.value.autenticado = true
                     onComplete()
                 }
             }
@@ -91,7 +76,7 @@ class AuthViewModel(
         runBlocking {
             appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, false)
         }
-        _autenticado.value = true
+        _perfilLocal.value.autenticado = true
         onComplete()
     }
 }

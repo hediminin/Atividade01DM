@@ -3,9 +3,7 @@ package com.example.atividade01dm.viewmodel
 import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.atividade01dm.api.ApiRepository
 import com.example.atividade01dm.api.ApiState
 import com.example.atividade01dm.api.request.UsuarioEditaRequestBody
 import com.example.atividade01dm.api.response.UsuarioEditaResponseBody
@@ -14,10 +12,8 @@ import com.example.atividade01dm.api.response.UsuariosResponseBody
 import kotlinx.coroutines.launch
 
 class UsuarioViewModel(
-    private val application: Application
-) : AndroidViewModel(application) {
-    private val apiRepository = ApiRepository()
-
+    application: Application
+) : MainViewModel(application) {
     private val _usuariosResponseBody = mutableStateOf<ApiState<UsuariosResponseBody>>(ApiState.Created())
     val usuariosResponseBody: State<ApiState<UsuariosResponseBody>> = _usuariosResponseBody
 

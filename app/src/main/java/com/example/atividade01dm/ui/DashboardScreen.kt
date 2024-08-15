@@ -43,6 +43,7 @@ fun DashboardScreen(
 ) {
     val dashBoardViewModel = viewModel<DashBoardViewModel>()
     val dashboardState by dashBoardViewModel.dashboardResponseBody
+    val perfilLocal by dashBoardViewModel.perfilLocal
 
     val authViewModel = viewModel<AuthViewModel>()
     val alertVisible = remember { mutableStateOf(false)  }
@@ -88,7 +89,7 @@ fun DashboardScreen(
                         .fillMaxWidth()
                 ) {
                     FotoPerfil(
-                        foto = dashBoardViewModel.perfilLocal.foto,
+                        foto = perfilLocal.foto,
                         50.dp
                     )
 
@@ -96,9 +97,9 @@ fun DashboardScreen(
                         modifier = Modifier
                             .padding(start = 10.dp)
                     ) {
-                        Text(dashBoardViewModel.perfilLocal.nome)
+                        Text(perfilLocal.nome)
                         Text(
-                            dashBoardViewModel.perfilLocal.email,
+                            perfilLocal.email,
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
