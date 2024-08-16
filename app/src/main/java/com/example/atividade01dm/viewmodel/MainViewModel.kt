@@ -19,6 +19,9 @@ open class MainViewModel(
     protected val apiRepository = ApiRepository()
     protected val appDataStore = AppDataStore(application.applicationContext)
 
+    protected var _autenticado = mutableStateOf(false)
+    var autenticado: State<Boolean> = _autenticado
+
     protected var _perfilLocal = mutableStateOf(PerfilLocal())
     var perfilLocal: State<PerfilLocal> = _perfilLocal
 
@@ -26,10 +29,15 @@ open class MainViewModel(
         loadLocalProfile()
     }
 
+    protected fun setAutenticado(autenticado: Boolean) {
+        _autenticado.value = autenticado
+    }
+
     private fun loadLocalProfile() {
         viewModelScope.launch {
             runBlocking {
-                _perfilLocal.value.autenticado = appDataStore.getBoolean(AppDataStoreKeys.AUTENTICADO).first()
+                _autenticado.value = appDataStore.getBoolean(AppDataStoreKeys.AUTENTICADO).first()
+
                 _perfilLocal.value.nome = appDataStore.getString(AppDataStoreKeys.NOME).first()
                 _perfilLocal.value.email = appDataStore.getString(AppDataStoreKeys.EMAIL).first()
                 _perfilLocal.value.foto = appDataStore.getString(AppDataStoreKeys.FOTO).first()

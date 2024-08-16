@@ -63,7 +63,7 @@ class AuthViewModel(
                             appDataStore.putString(AppDataStoreKeys.FOTO, foto)
                         }
                     }
-                    _perfilLocal.value.autenticado = true
+                    setAutenticado(true)
                     onComplete()
                 }
             }
@@ -76,7 +76,7 @@ class AuthViewModel(
         runBlocking {
             appDataStore.putBoolean(AppDataStoreKeys.AUTENTICADO, false)
         }
-        _perfilLocal.value.autenticado = true
+        setAutenticado(false)
         onComplete()
     }
 }
