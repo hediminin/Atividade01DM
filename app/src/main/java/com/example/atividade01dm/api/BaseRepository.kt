@@ -1,5 +1,6 @@
 package com.example.atividade01dm.api
 
+import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,6 +33,7 @@ abstract class BaseRepository {
                     )
                 }
             } catch (e: IOException) {
+                Log.e("API_ERROR", e.message.toString())
                 ApiState.Error(
                     message = "Falha na conexão com o servidor"
                 )

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Atividade01DM</string>
+    <string name="fileprovider">com.example.atividade01dm.fileprovider</string>
 </resources>
