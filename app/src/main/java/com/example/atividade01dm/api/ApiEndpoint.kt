@@ -46,13 +46,13 @@ interface ApiEndpoint {
     suspend fun getDashboard() : Response<DashboardResponseBody>
 
     @Multipart
-    @PUT("/imagens")
+    @PUT("/usuario/foto")
     suspend fun uploadFotoPerfil(
         @Part image: MultipartBody.Part
     ): Response<UploadFotoPerfilResponseBody>
 
     @Multipart
-    @PUT("/imagens/{id}")
+    @PUT("/usuario/{id}/foto")
     suspend fun uploadFotoPerfil(
         @Path("id") id: String,
         @Part image: MultipartBody.Part

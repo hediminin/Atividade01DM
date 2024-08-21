@@ -231,14 +231,6 @@ fun UsuarioEditaScreen(
                         email = responseData.email
                         responseData.foto?.let { foto ->
                             fotoAtual = foto
-
-                            scope.launch {
-                                snackbarHostState
-                                    .showSnackbar(
-                                        message = "Foto atualizada",
-                                        duration = SnackbarDuration.Short
-                                    )
-                            }
                         }
                         usuarioViewModel.clearApiState()
                     }
@@ -260,6 +252,14 @@ fun UsuarioEditaScreen(
                     usuarioUploadFotoState.data?.let { responseData ->
                         val dadosUpload = responseData.dados
                         fotoAtual = dadosUpload.id_imagem
+
+                        scope.launch {
+                            snackbarHostState
+                                .showSnackbar(
+                                    message = "Foto atualizada",
+                                    duration = SnackbarDuration.Short
+                                )
+                        }
                     }
                 }
                 is ApiState.Error -> {
