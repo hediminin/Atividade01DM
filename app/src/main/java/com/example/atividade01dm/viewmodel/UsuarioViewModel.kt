@@ -56,7 +56,7 @@ class UsuarioViewModel(
         }
     }
 
-    fun uploadFotoPerfil(imageUri: Uri) {
+    fun uploadFotoPerfil(id: String, imageUri: Uri) {
         viewModelScope.launch {
             val file = File.createTempFile(
                 "tmp_" + System.currentTimeMillis().toString(),
@@ -73,7 +73,7 @@ class UsuarioViewModel(
             val image = MultipartBody.Part.createFormData(name = "image", file.name, requestBody)
 
             _uploadFotoPerfilResponseBody.value = ApiState.Loading()
-            _uploadFotoPerfilResponseBody.value = apiRepository.uploadFotoPerfil(image)
+            _uploadFotoPerfilResponseBody.value = apiRepository.uploadFotoPerfil(id, image)
         }
     }
 

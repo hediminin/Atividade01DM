@@ -38,6 +38,7 @@ fun FotoPerfil(
             Image(
                 painter = painterResource(id = R.drawable.ic_person),
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(tamanho)
                     .clip(CircleShape)

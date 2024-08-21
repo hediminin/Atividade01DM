@@ -40,14 +40,21 @@ interface ApiEndpoint {
     suspend fun usuarioEdita(
         @Path("id") id: String,
         @Body requestBody: UsuarioEditaRequestBody
-    ) : Response<UsuarioEditaResponseBody>
+    ): Response<UsuarioEditaResponseBody>
 
     @GET("/dashboard")
     suspend fun getDashboard() : Response<DashboardResponseBody>
 
     @Multipart
-    @POST("/imagens")
+    @PUT("/imagens")
     suspend fun uploadFotoPerfil(
+        @Part image: MultipartBody.Part
+    ): Response<UploadFotoPerfilResponseBody>
+
+    @Multipart
+    @PUT("/imagens/{id}")
+    suspend fun uploadFotoPerfil(
+        @Path("id") id: String,
         @Part image: MultipartBody.Part
     ): Response<UploadFotoPerfilResponseBody>
 }

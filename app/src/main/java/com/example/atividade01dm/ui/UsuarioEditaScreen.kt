@@ -231,6 +231,14 @@ fun UsuarioEditaScreen(
                         email = responseData.email
                         responseData.foto?.let { foto ->
                             fotoAtual = foto
+
+                            scope.launch {
+                                snackbarHostState
+                                    .showSnackbar(
+                                        message = "Foto atualizada",
+                                        duration = SnackbarDuration.Short
+                                    )
+                            }
                         }
                         usuarioViewModel.clearApiState()
                     }
@@ -300,7 +308,7 @@ fun UsuarioEditaScreen(
         onResult = { selectedImageUri ->
             selectedImageUri?.let {
                 imageUri.value = it
-                usuarioViewModel.uploadFotoPerfil(it)
+                usuarioViewModel.uploadFotoPerfil(id, it)
                 hideSheet()
             }
         }
@@ -311,7 +319,7 @@ fun UsuarioEditaScreen(
         onResult = { isSaved ->
             if (isSaved) {
                 imageUri.value?.let {
-                    usuarioViewModel.uploadFotoPerfil(it)
+                    usuarioViewModel.uploadFotoPerfil(id, it)
                     hideSheet()
                 }
             }
@@ -335,7 +343,7 @@ fun UsuarioEditaScreen(
     if (showBottomSheet) {
         ModalBottomSheet(
             onDismissRequest = {
-                showBottomSheet = false
+                hideSheet()
             },
             sheetState = sheetState
         ) {
@@ -345,6 +353,8 @@ fun UsuarioEditaScreen(
                 Row(
                     modifier = Modifier
                         .clickable {
+                            hideSheet()
+
                             //Fotografar.
                             val cameraPermission = Manifest.permission.CAMERA
                             if (ContextCompat.checkSelfPermission(
@@ -370,7 +380,8 @@ fun UsuarioEditaScreen(
                 Row(
                     modifier = Modifier
                         .clickable {
-                            showBottomSheet = false
+                            hideSheet()
+
                             //Selecionar imagem da galeria.
                             imagePicker.launch(
                                 PickVisualMediaRequest(

@@ -42,4 +42,12 @@ class ApiRepository: BaseRepository() {
             return makeApiCall { ApiClient.apiEndpoint.uploadFotoPerfil(image)
         }
     }
+
+    suspend fun uploadFotoPerfil(
+        id: String,
+        image: MultipartBody.Part
+    ) : ApiState<UploadFotoPerfilResponseBody> {
+        return makeApiCall { ApiClient.apiEndpoint.uploadFotoPerfil(id, image)
+        }
+    }
 }
