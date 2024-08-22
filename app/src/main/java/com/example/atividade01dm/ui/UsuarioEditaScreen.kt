@@ -251,7 +251,7 @@ fun UsuarioEditaScreen(
                 is ApiState.Success -> {
                     usuarioUploadFotoState.data?.let { responseData ->
                         val dadosUpload = responseData.dados
-                        fotoAtual = dadosUpload.id_imagem
+                        fotoAtual = dadosUpload._id
 
                         scope.launch {
                             snackbarHostState
@@ -281,7 +281,7 @@ fun UsuarioEditaScreen(
     }
 
     /*
-    Selecionar ou fotografar
+    Cria um arquivo temporário para armazenar a foto capturada pela câmera.
      */
     fun createTempImageUri(): Uri? {
         val directory = context.cacheDir
@@ -303,6 +303,9 @@ fun UsuarioEditaScreen(
         return null
     }
 
+    /*
+    Seletor de imagens para selecionar imagem da galeria.
+     */
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { selectedImageUri ->
@@ -314,6 +317,9 @@ fun UsuarioEditaScreen(
         }
     )
 
+    /*
+    Capturar foto com a câmera.
+     */
     val takePhotoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { isSaved ->
@@ -326,6 +332,9 @@ fun UsuarioEditaScreen(
         }
     )
 
+    /*
+   Verifica se o usuário autorizou o uso da câmera.
+     */
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -355,13 +364,12 @@ fun UsuarioEditaScreen(
                         .clickable {
                             hideSheet()
 
-                            //Fotografar.
+                            /*
+                            Fotografar.
+                            Se o usuário permitiu usar a câmera, abre a captura, senão solicita permissão.
+                             */
                             val cameraPermission = Manifest.permission.CAMERA
-                            if (ContextCompat.checkSelfPermission(
-                                    context,
-                                    cameraPermission
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
+                            if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
                                 val tmpUri = createTempImageUri()
                                 tmpUri?.let {
                                     imageUri.value = it
@@ -382,7 +390,9 @@ fun UsuarioEditaScreen(
                         .clickable {
                             hideSheet()
 
-                            //Selecionar imagem da galeria.
+                            /*
+                            Abre seletor de imagem da galeria.
+                             */
                             imagePicker.launch(
                                 PickVisualMediaRequest(
                                     ActivityResultContracts.PickVisualMedia.ImageOnly
@@ -400,10 +410,15 @@ fun UsuarioEditaScreen(
         }
     }
 
-    if (usuarioState is ApiState.Loading ||
-        usuarioEditaState is ApiState.Loading ||
-        usuarioUploadFotoState is ApiState.Loading)
-    {
+    if (usuarioState is ApiState.Loading) {
+        LoadScreen()
+    }
+
+    if (usuarioEditaState is ApiState.Loading) {
+        LoadScreen()
+    }
+
+    if (usuarioUploadFotoState is ApiState.Loading) {
         LoadScreen()
     }
 

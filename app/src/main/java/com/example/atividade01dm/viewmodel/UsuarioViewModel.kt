@@ -80,11 +80,20 @@ class UsuarioViewModel(
     private fun resizePhoto(bitmap: Bitmap): Bitmap {
         val w = bitmap.width
         val h = bitmap.height
-        val aspRat = w.toDouble() / h.toDouble()
-        val dstW = 400
-        val dstH = dstW * aspRat
-        val result =  Bitmap.createScaledBitmap(bitmap, dstW, dstH.toInt(), false)
-        return result
+        var aspRat: Double
+        var dstW: Double
+        var dstH: Double
+        if (h > w) {
+            aspRat = w.toDouble() / h.toDouble()
+            dstH = 400.0
+            dstW = dstH * aspRat
+        } else {
+            aspRat = h.toDouble() / w.toDouble()
+            dstW = 400.0
+            dstH = dstW * aspRat
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, dstW.toInt(), dstH.toInt(), false)
     }
 
     fun clearApiState() {
