@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.atividade01dm.R
 import com.example.atividade01dm.api.ApiState
+import com.example.atividade01dm.ui.theme.surfaceContainerLight
 import com.example.atividade01dm.viewmodel.AuthViewModel
 import com.example.atividade01dm.viewmodel.DashBoardViewModel
 
@@ -112,7 +113,7 @@ fun DashboardScreen(
                             navController.navigate("usuarios")
                         }
                         .background(
-                            color = Color.LightGray,
+                            color = surfaceContainerLight,
                             shape = RoundedCornerShape(8.dp)
                         )
                         .padding(16.dp)
